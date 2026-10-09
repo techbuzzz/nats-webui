@@ -1,0 +1,61 @@
+{
+  "name": "nats-webui",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Self-hosted web UI for the NATS server monitoring endpoint, JetStream, and a publish/request playground. Runs as a Docker sidecar.",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/nats-webui/nats-webui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nats-webui/nats-webui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nats-webui/nats-webui/issues"
+  },
+  "keywords": [
+    "nats",
+    "jetstream",
+    "nats-ui",
+    "monitoring",
+    "observability",
+    "docker",
+    "nuxt",
+    "vue",
+    "nats-server",
+    "self-hosted"
+  ],
+  "author": "nats-webui contributors",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "nuxt typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "nuxt": "^4.2.1",
+    "vue": "^3.5.24",
+    "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.17.0",
+    "@types/node": "^26.6.4",
+    "@vue/test-utils": "^2.4.6",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.9",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4",
+    "vue-tsc": "^3.1.4"
+  }
+}
