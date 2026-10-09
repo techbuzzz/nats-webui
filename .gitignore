@@ -1,0 +1,30 @@
+node_modules
+.nuxt
+.output
+.data
+dist
+coverage
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editors and OS
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Local verification artifacts
+*.network-request
+*.network-response
+.playwright/
+test-results/
