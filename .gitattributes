@@ -1,0 +1,17 @@
+# Normalise line endings in the repository; check out LF everywhere except
+# Windows scripts that genuinely need CRLF. Without this, contributors on
+# Windows with core.autocrlf=true see every file as modified.
+* text=auto eol=lf
+
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.ps1   text eol=crlf
+
+# Binary assets must never be line-ending converted.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
