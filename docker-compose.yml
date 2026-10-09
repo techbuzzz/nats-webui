@@ -1,0 +1,74 @@
+# --- NATS server + WebUI on one Docker network -----------------------------
+# The WebUI is a sidecar: it reads the NATS monitoring endpoint server-side and
+# proxies it to the browser, so port 8222 is never published to the host.
+
+services:
+  nats:
+    image: nats:2.11-alpine
+    container_name: peanuts-nats
+    command:
+      - --config
+      - /etc/nats/nats-server.conf
+    volumes:
+      - nats-data:/data
+      - ./nats/nats-server.conf:/etc/nats/nats-server.conf:ro
+    # Only the WebSocket port is published: the browser needs it for the
+    # playground. The monitoring port stays on the internal network.
+    ports:
+      - "4222:4222"
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8222/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - peanuts
+    restart: unless-stopped
+
+  webui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: peanuts-webui
+    depends_on:
+      nats:
+        condition: service_healthy
+    environment:
+      # Server-side: where Nitro proxies from. Resolved at runtime, not build time.
+      NUXT_NATS_MONITOR_URL: "http://nats:8222"
+      NUXT_NATS_CLIENT_URL: "nats://nats:4222"
+      NUXT_NATS_MONITOR_TIMEOUT_MS: "8000"
+      # Credentials are intentionally unset. Supply them here (or via an env
+      # file) only when the monitoring endpoint requires auth — never bake
+      # them into the image or the repository.
+      # NUXT_NATS_MONITOR_USER: ""
+      # NUXT_NATS_MONITOR_PASSWORD: ""
+      # NUXT_NATS_MONITOR_TOKEN: ""
+      # Client-side: the WebSocket URL the *browser* can reach. This must not be
+      # the Docker-internal hostname, since the browser resolves it.
+      NUXT_PUBLIC_NATS_WS_URL: "ws://localhost:8080"
+      NUXT_PUBLIC_NATS_CONNECTION_NAME: "nats-webui"
+      NITRO_PORT: "3000"
+      NITRO_HOST: "0.0.0.0"
+    ports:
+      - "3000:3000"
+    # Nitro writes nothing outside /tmp, so the root filesystem can stay read-only.
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    networks:
+      - peanuts
+    restart: unless-stopped
+
+volumes:
+  nats-data:
+
+networks:
+  peanuts:
+    driver: bridge
