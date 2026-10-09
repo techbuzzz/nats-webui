@@ -1,0 +1,91 @@
+name: Bug report
+description: Something in the WebUI does not behave as documented.
+labels: ['bug']
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened
+      description: What you expected, and what actually happened.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: WebUI version
+      description: The tag, digest, or `git describe` output of the build you are running.
+      placeholder: v1.0.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deployment
+    attributes:
+      label: How are you running it
+    options:
+      - docker compose (upstream file, unmodified)
+      - docker compose (modified)
+      - docker run / GHCR image
+      - npm run dev / local build
+      - other
+    validations:
+      required: true
+
+  - type: input
+    id: nats-version
+    attributes:
+      label: NATS server version
+      description: From `/varz` — for example `2.11.17`.
+      placeholder: 2.11.17
+    validations:
+      required: true
+
+  - type: textarea
+    id: nats-config
+    attributes:
+      label: Relevant NATS server config
+      description: >
+        The `http_port` / monitoring block and the `websocket` block from your
+        nats-server.conf. Redact hostnames, tokens and passwords.
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Start the stack with `docker compose up -d`
+        2. Open the Routing page
+        3. …
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and OS
+      placeholder: Firefox 145 on Ubuntu 24.04
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: >
+        `docker compose logs webui`, the playground protocol log, or the browser
+        console. Redact credentials — they should never appear, and if they do
+        that is itself worth reporting prominently.
+      render: shell
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for this.
+          required: true
+        - label: I removed credentials and hostnames from the logs above.

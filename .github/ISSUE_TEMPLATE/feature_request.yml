@@ -1,0 +1,59 @@
+name: Feature request
+description: Propose a capability or improvement to the NATS WebUI.
+labels: ['enhancement']
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: >
+        What are you trying to do that is hard or impossible today? Describe the
+        workflow, not the solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: What you would like to happen instead.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where does this live
+      options:
+      - Dashboard
+      - Connections
+      - Routing & subscriptions
+      - JetStream
+      - Playground
+      - Settings
+      - Deployment / Docker
+      - Cross-cutting (shared/, server/, or CI)
+    validations:
+      required: true
+
+  - type: textarea
+    id: data-source
+    attributes:
+      label: Data source
+      description: >
+        Which NATS endpoint would back this — `/varz`, `/connz`, `/subsz`,
+        `/routez`, `/jsz`, or the JetStream API (`$JS.API.*`)? The monitoring
+        endpoint and the JetStream API are different surfaces, and crossing them
+        has different security implications.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: >
+            I checked that this is not already implemented, and that
+            nats-io/nats-surveyor does not already cover it.
+          required: true

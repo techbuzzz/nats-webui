@@ -1,0 +1,49 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Etc/UTC
+    open-pull-requests-limit: 10
+    groups:
+      # Nuxt, Vue and vue-router ship together; bump them as one unit so a
+      # half-upgraded tree never reaches CI.
+      nuxt-core:
+        patterns:
+          - 'nuxt'
+          - 'vue'
+          - 'vue-router'
+          - '@vue/*'
+          - 'vue-tsc'
+      typescript:
+        patterns:
+          - 'typescript'
+          - '@types/*'
+      lint-tooling:
+        patterns:
+          - 'eslint'
+          - '@nuxt/eslint'
+          - 'eslint-config-prettier'
+          - 'prettier'
+      test-tooling:
+        patterns:
+          - 'vitest'
+          - '@vue/test-utils'
+          - '@vitest/*'
+
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    groups:
+      actions:
+        patterns:
+          - '*'

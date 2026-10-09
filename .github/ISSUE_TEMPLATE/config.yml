@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/nats-webui/nats-webui/security/advisories/new
+    about: Report a security issue privately — see SECURITY.md. Please do not open a public issue.
+  - name: NATS server documentation
+    url: https://docs.nats.io/
+    about: Questions about configuring the NATS server itself belong upstream.
