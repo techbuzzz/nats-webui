@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
     tags: ['v*.*.*']
-  # Manual re-run from the Actions tab. Building without pushing is safe.
+  # Manual re-run from the Actions tab. Building without pushing is safe;
+  # publishing requires a semver tag, so a manual run of main verifies only.
   workflow_dispatch:
 
 permissions:
@@ -49,10 +50,9 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            # Disabled everywhere: no mutable alias such as `latest` is ever
-            # derived from an untagged commit. A push to main still builds and
-            # verifies the image for both architectures, but pushes it by digest
-            # only — a tagged release is the only thing that gets a name.
+            # No mutable `latest` alias is ever produced. Only a release tag
+            # publishes a named image, so an untagged commit can never take over
+            # a tag someone is pulling.
             type=raw,value=latest,enable=false
           labels: |
             org.opencontainers.image.title=${{ github.event.repository.name }}
@@ -60,17 +60,24 @@ jobs:
             org.opencontainers.image.licenses=Apache-2.0
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
 
+      # `push` is gated on the ref actually being a semver tag, NOT on the event
+      # being a push. metadata-action emits no tags for an untagged commit, and
+      # buildx refuses to push an untagged manifest:
+      #   ERROR: failed to build: tag is needed when pushing to registry
+      # So `push: ${{ github.event_name != 'pull_request' }}` would break every
+      # push to main. Main pushes build for both architectures and verify, then
+      # discard — the per-PR image check lives in ci.yml's `compose` job.
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ startsWith(github.ref, 'refs/tags/v') }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # Attestations give a verifiable link from the image digest back to the
-          # workflow run that produced it.
+          # Attestations give a verifiable link from the image digest back to
+          # the workflow run that produced it.
           provenance: mode=max
           sbom: true

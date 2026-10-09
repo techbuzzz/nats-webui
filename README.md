@@ -4,8 +4,8 @@ A self-hosted web UI for a [NATS](https://github.com/nats-io/nats-server)
 server — live monitoring, a JetStream overview, and a publish / request-reply
 playground, in one container that runs next to the server.
 
-[![CI](https://github.com/nats-webui/nats-webui/actions/workflows/ci.yml/badge.svg)](https://github.com/nats-webui/nats-webui/actions/workflows/ci.yml)
-[![Docker image](https://img.shields.io/badge/docker-ghcr.io%2Fnats-webui%2Fnats-webui-blue?logo=docker)](https://github.com/nats-webui/nats-webui/pkgs/container/nats-webui)
+[![CI](https://github.com/techbuzzz/nats-webui/actions/workflows/ci.yml/badge.svg)](https://github.com/techbuzzz/nats-webui/actions/workflows/ci.yml)
+[![Docker image](https://img.shields.io/badge/docker-ghcr.io%2Fnats-webui%2Fnats-webui-blue?logo=docker)](https://github.com/techbuzzz/nats-webui/pkgs/container/nats-webui)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
 
 ![The nats-webui dashboard](./docs/screenshots/dashboard.png)
@@ -59,7 +59,7 @@ monitoring, Surveyor is the more mature and the simpler answer.
 The single command — NATS and the WebUI on one network, nothing to configure:
 
 ```bash
-git clone https://github.com/nats-webui/nats-webui.git
+git clone https://github.com/techbuzzz/nats-webui.git
 cd nats-webui
 docker compose up -d
 ```
@@ -84,16 +84,17 @@ docker compose down -v       # also delete JetStream data
 ### Prebuilt image
 
 The `Docker` workflow publishes a multi-arch (`linux/amd64`, `linux/arm64`) image
-to GHCR. Semver tags (`v1.2.3`) carry the `1.2.3`, `1.2` and `1` aliases; a push
-to `main` builds and verifies the same image but publishes it by digest only.
+to GHCR. **Only a semver tag publishes an image** — pushing `v1.2.3` publishes
+`1.2.3`, `1.2` and `1`.
 
 ```bash
-docker pull ghcr.io/nats-webui/nats-webui:latest
+docker pull ghcr.io/techbuzzz/nats-webui:1
 ```
 
-`latest` is only ever set by a release tag. A push to `main` builds and verifies
-the image for both architectures but publishes it by digest, so an untagged
-commit never takes over the `latest` alias.
+A push to `main` builds the image for both architectures and verifies it, then
+discards it: an untagged commit never gets a name, and there is deliberately no
+`latest` alias for one to hijack. Per-commit image verification happens on every
+pull request in the `compose` job of the `CI` workflow.
 
 To run it alongside an existing NATS server, override the runtime variables (see
 [Configuration](#configuration) below); the image needs no rebuild.

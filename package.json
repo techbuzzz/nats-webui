@@ -5,13 +5,13 @@
   "type": "module",
   "description": "Self-hosted web UI for the NATS server monitoring endpoint, JetStream, and a publish/request playground. Runs as a Docker sidecar.",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/nats-webui/nats-webui#readme",
+  "homepage": "https://github.com/techbuzzz/nats-webui#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nats-webui/nats-webui.git"
+    "url": "git+https://github.com/techbuzzz/nats-webui.git"
   },
   "bugs": {
-    "url": "https://github.com/nats-webui/nats-webui/issues"
+    "url": "https://github.com/techbuzzz/nats-webui/issues"
   },
   "keywords": [
     "nats",

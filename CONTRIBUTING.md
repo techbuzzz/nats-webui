@@ -14,7 +14,7 @@ By taking part you agree to the [Code of Conduct](CODE_OF_CONDUCT.md).
 ## Getting set up
 
 ```bash
-git clone https://github.com/nats-webui/nats-webui.git
+git clone https://github.com/techbuzzz/nats-webui.git
 cd nats-webui
 npm ci
 npm run postinstall          # generates .nuxt/ (types + the ESLint flat config)

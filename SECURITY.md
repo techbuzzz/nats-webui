@@ -6,7 +6,7 @@ Please **do not open a public issue** for a security problem.
 
 Report it through GitHub's private vulnerability advisory for this repository:
 
-> <https://github.com/nats-webui/nats-webui/security/advisories/new>
+> <https://github.com/techbuzzz/nats-webui/security/advisories/new>
 >
 > (Repository → *Security* → *Report a vulnerability*)
 
