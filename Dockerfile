@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1
 
 # ---------------------------------------------------------------------------
-# Stage 1 — install dependencies (full tree, needed for the Nuxt build)
+# Stage 1 â€” install dependencies (full tree, needed for the Nuxt build)
 # ---------------------------------------------------------------------------
-FROM node:22-alpine AS deps
+FROM node:24-alpine AS deps
 
 WORKDIR /app
 
@@ -20,9 +20,9 @@ COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
 # ---------------------------------------------------------------------------
-# Stage 2 — build the Nuxt/Nitro output
+# Stage 2 â€” build the Nuxt/Nitro output
 # ---------------------------------------------------------------------------
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 
 WORKDIR /app
 ENV HTTP_PROXY="" HTTPS_PROXY="" http_proxy="" https_proxy="" NO_PROXY="*" no_proxy="*"
@@ -33,9 +33,9 @@ COPY . .
 RUN npm run build
 
 # ---------------------------------------------------------------------------
-# Stage 3 — runtime: only the Nitro server output, no toolchain, no sources
+# Stage 3 â€” runtime: only the Nitro server output, no toolchain, no sources
 # ---------------------------------------------------------------------------
-FROM node:22-alpine AS runtime
+FROM node:24-alpine AS runtime
 
 WORKDIR /app
 ENV NODE_ENV=production \

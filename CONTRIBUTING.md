@@ -71,6 +71,29 @@ it to `.prettierrc` instead.
 > on stderr and still exits 0. That is an upstream packaging issue, not a
 > failure here. Do not try to "fix" it.
 
+## Do not run `npm audit fix`
+
+`npm audit` currently reports 14 advisories against the Nuxt toolchain — 7
+critical, 7 high. Every one of them is **transitive**, reached through
+`@nuxt/devtools`, `@nuxt/vite-builder`, `@nuxt/vite-server`,
+`@nuxt/nitro-server`, `simple-git`, `globby`/`fast-glob`/`braces`/`micromatch`,
+`listhen` and `node-forge`.
+
+None of them ship. The runtime image is a multi-stage build that copies only
+`.output`, and a `package.json` scan of `.output/server/node_modules` shows the
+shipped set is `nuxt`, `vue`, `@unhead/vue`, `@vue/server-renderer`,
+`devalue`, `ufo`, `pathe`, `hookable`, `estree-walker`, `destr` and a handful
+of small helpers. No build or devtools package is reachable at runtime, and
+`devtools` is disabled in `nuxt.config.ts`.
+
+The reason to write this down: `npm audit fix` claims the fix for these is
+`nuxt@3.7.4` — a *downgrade* two majors back. Running it silently replaces a
+Nuxt 4 project with Nuxt 3, breaks every test, and looks like a security fix
+rather than the regression it is. CI does not run `npm audit`, by design.
+
+If a future Nuxt release actually lands the fix, take the upgrade deliberately
+through the four required checks above.
+
 ## Tests
 
 The suites live in `tests/` and run under Vitest in a plain Node environment —
