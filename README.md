@@ -5,7 +5,7 @@ server — live monitoring, a JetStream overview, and a publish / request-reply
 playground, in one container that runs next to the server.
 
 [![CI](https://github.com/techbuzzz/nats-webui/actions/workflows/ci.yml/badge.svg)](https://github.com/techbuzzz/nats-webui/actions/workflows/ci.yml)
-[![Docker image](https://img.shields.io/badge/docker-ghcr.io%2Fnats-webui%2Fnats-webui-blue?logo=docker)](https://github.com/techbuzzz/nats-webui/pkgs/container/nats-webui)
+[![Docker Image](https://ghcr.io/techbuzzz/nats-webui/badge)](https://github.com/techbuzzz/nats-webui/pkgs/container/nats-webui)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
 
 ![The nats-webui dashboard](./docs/screenshots/dashboard.png)
