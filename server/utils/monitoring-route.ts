@@ -5,17 +5,25 @@
  * Routes stay one-liners so all behaviour worth testing lives here.
  */
 
-import { createError } from 'h3'
-import type { H3Event } from 'h3'
+import { createError } from 'nuxt/server'
 import type { MonitoringFailure } from '#shared/types/monitoring'
 import type { NatsRuntimeConfig } from './nats-config'
 import { MonitoringError, fetchMonitoringJson } from './nats-monitoring'
 
 /**
+ * The only part of the request event this module reads.
+ *
+ * The type is derived from `getQuery` itself rather than imported from `h3` or
+ * `nuxt/schema`, so it stays correct whichever server builder supplies the
+ * event and does not leak a specific event class into the call sites.
+ */
+type QueryEvent = Parameters<typeof getQuery>[0]
+
+/**
  * Untrusted query input as handed over by `getQuery`.
  *
- * h3 declares its own `QueryObject` internally without exporting it, so the
- * structural shape is spelled out here.
+ * The runtime does not export its own `QueryObject`, so the structural shape is
+ * spelled out here.
  */
 export type MonitoringQuery = Record<string, string | string[] | undefined>
 
@@ -32,7 +40,11 @@ const DEFAULT_NUMBER_RULES: Record<'number' | 'bool', NumberRule> = {
   bool: {},
 }
 
-function coerce(kind: 'number' | 'bool' | 'string', value: string, rules: NumberRule): string | null {
+function coerce(
+  kind: 'number' | 'bool' | 'string',
+  value: string,
+  rules: NumberRule,
+): string | null {
   if (kind === 'string') {
     return value
   }
@@ -66,10 +78,7 @@ function coerce(kind: 'number' | 'bool' | 'string', value: string, rules: Number
  * Anything undeclared is dropped, so the proxy can only ever forward parameters
  * the upstream monitoring endpoint understands.
  */
-export function sanitizeQuery(
-  query: MonitoringQuery,
-  spec: QuerySpec,
-): Record<string, string> {
+export function sanitizeQuery(query: MonitoringQuery, spec: QuerySpec): Record<string, string> {
   const result: Record<string, string> = {}
 
   for (const [key, kind] of Object.entries(spec)) {
@@ -129,9 +138,13 @@ export async function handleMonitoring<TWire, TView>(
   config?: NatsRuntimeConfig,
 ): Promise<TView> {
   try {
-    return await fetchNormalized<TWire, TView>(endpoint, sanitizeQuery(query, spec), normalize, config)
-  }
-  catch (error) {
+    return await fetchNormalized<TWire, TView>(
+      endpoint,
+      sanitizeQuery(query, spec),
+      normalize,
+      config,
+    )
+  } catch (error) {
     if (error instanceof MonitoringError) {
       throw createError({
         statusCode: statusForFailure(error.failure),
@@ -146,7 +159,7 @@ export async function handleMonitoring<TWire, TView>(
 
 /** Convenience wrapper so route files read as `monitoringRoute(event, ...)`. */
 export function monitoringRoute<TWire, TView>(
-  event: H3Event,
+  event: QueryEvent,
   endpoint: string,
   spec: QuerySpec,
   normalize: (raw: TWire) => TView,

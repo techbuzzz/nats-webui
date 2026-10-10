@@ -1,6 +1,6 @@
 {
   "name": "nats-webui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "description": "Self-hosted web UI for the NATS server monitoring endpoint, JetStream, and a publish/request playground. Runs as a Docker sidecar.",
@@ -43,18 +43,18 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "nuxt": "^4.6.0",
+    "nuxt": "^4.6.1",
     "vue": "^3.5.43"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.17.0",
     "@types/node": "^26.6.4",
-    "@vue/test-utils": "^2.5.1",
     "eslint": "^10.12.0",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.9.9",
     "typescript": "^6.0.3",
     "vitest": "^5.0.3",
+    "vue-router": "^5.4.0",
     "vue-tsc": "^3.3.12"
   }
 }

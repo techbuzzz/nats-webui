@@ -66,10 +66,16 @@ ruleset off and `eslint-config-prettier` applied last, so a line is either
 linted or formatted, never both. If you add a lint rule that touches layout, add
 it to `.prettierrc` instead.
 
-> `npm run typecheck` prints a non-fatal
-> `ERR_PACKAGE_PATH_NOT_EXPORTED` warning for `vue-router/volar/sfc-route-blocks`
-> on stderr and still exits 0. That is an upstream packaging issue, not a
-> failure here. Do not try to "fix" it.
+> If `npm run typecheck` prints `Resolve plugin path failed:
+> vue-router/volar/sfc-route-blocks`, that is **not** a harmless upstream
+> warning — `vue-tsc` still exits 0 while quietly skipping the Vue route-block
+> typing, so type coverage is degraded without any visible failure. Nuxt emits
+> that plugin into `.nuxt/tsconfig.app.json` unconditionally, and `vue-tsc`
+> resolves plugin names from the project root. It therefore only loads when
+> `vue-router` is hoisted there, which is why it is declared in
+> `devDependencies` even though no source file imports it. Keep the range
+> aligned with the one Nuxt requires, and confirm with
+> `npm ls vue-router` that a single instance is installed at the root.
 
 ## Do not run `npm audit fix`
 

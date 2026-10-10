@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { NatsClientConfig } from '#shared/types/monitoring'
-
 /** Application shell: sidebar navigation plus the page content area. */
 interface NavItem {
   to: string
@@ -17,7 +15,7 @@ const navItems: NavItem[] = [
   { to: '/settings', label: 'Settings', icon: '⚙' },
 ]
 
-const { data: clientConfig } = await useFetch<NatsClientConfig>('/api/config', {
+const { data: clientConfig } = await useFetch('/api/config', {
   key: 'nats-client-config',
   default: () => ({
     websocketUrl: '',
@@ -37,21 +35,14 @@ const { data: clientConfig } = await useFetch<NatsClientConfig>('/api/config', {
       </NuxtLink>
 
       <nav class="app-nav" aria-label="Primary">
-        <NuxtLink
-          v-for="item in navItems"
-          :key="item.to"
-          :to="item.to"
-          class="app-nav-link"
-        >
+        <NuxtLink v-for="item in navItems" :key="item.to" :to="item.to" class="app-nav-link">
           <span aria-hidden="true">{{ item.icon }}</span>
           <span>{{ item.label }}</span>
         </NuxtLink>
       </nav>
 
       <div class="sidebar-status">
-        <p class="stat-tile-label">
-          Monitored server
-        </p>
+        <p class="stat-tile-label">Monitored server</p>
         <p class="sidebar-status-value">
           {{ clientConfig.serverVersion || 'unknown version' }}
         </p>
