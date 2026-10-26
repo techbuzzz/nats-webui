@@ -43,7 +43,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "nuxt": "^4.6.1",
+    "nuxt": "^4.6.2",
     "vue": "^3.5.43"
   },
   "devDependencies": {
@@ -55,6 +55,6 @@
     "typescript": "^6.0.3",
     "vitest": "^5.0.3",
     "vue-router": "^5.4.0",
-    "vue-tsc": "^3.3.12"
+    "vue-tsc": "^3.3.13"
   }
 }
